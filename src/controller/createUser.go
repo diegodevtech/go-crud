@@ -7,10 +7,15 @@ import (
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/validation"
 	"github.com/diegodevtech/go-crud/src/controller/model/request"
-	"github.com/diegodevtech/go-crud/src/controller/model/response"
+	// "github.com/diegodevtech/go-crud/src/controller/model/response"
+	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	// "go.uber.org/zap/zapcore"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func CreateUser(c *gin.Context) {
@@ -31,16 +36,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	response := response.UserResponse{
-		ID: "test",
-		Email: userRequest.Email,
-		Name: userRequest.Name,
-		Age: userRequest.Age,
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+	
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(err.Code, err)
 	}
 
 	logger.Info("User created successfully",
 		zap.String("journey","createUser"),
 	)
 
-	c.JSON(http.StatusOK, response)
+	c.String(http.StatusOK, "")
 }
