@@ -7,6 +7,8 @@ import (
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/validation"
 	"github.com/diegodevtech/go-crud/src/controller/model/request"
+	"github.com/diegodevtech/go-crud/src/view"
+
 	// "github.com/diegodevtech/go-crud/src/controller/model/response"
 	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,7 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	logger.Info("Initializing CreateUser Controller Method",
 		zap.String("journey","createUser"),
 	)
@@ -42,8 +44,10 @@ func CreateUser(c *gin.Context) {
 		userRequest.Name,
 		userRequest.Age,
 	)
+
 	
-	if err := domain.CreateUser(); err != nil {
+	
+	if err := uc.service.CreateUser(domain); err != nil {
 		c.JSON(err.Code, err)
 	}
 
@@ -51,5 +55,5 @@ func CreateUser(c *gin.Context) {
 		zap.String("journey","createUser"),
 	)
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
 }
