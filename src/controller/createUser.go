@@ -22,7 +22,7 @@ var (
 
 func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	logger.Info("Initializing CreateUser Controller Method",
-		zap.String("journey","createUser"),
+		zap.String("journey", "createUser"),
 	)
 	var userRequest request.UserRequest
 
@@ -45,15 +45,16 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	
-	
-	if err := uc.service.CreateUser(domain); err != nil {
-		c.JSON(err.Code, err)
+	domainResult, err2 := uc.service.CreateUser(domain)
+	if err2 != nil {
+		logger.Error("Error trying to call createUser service",err, zap.String("journey", "createUser"))
+		c.JSON(err2.Code, err)
 	}
 
-	logger.Info("User created successfully",
-		zap.String("journey","createUser"),
+	logger.Info("CreateUser controller executed successfully",
+		zap.String("userId", domain.GetID()),
+		zap.String("journey", "createUser"),
 	)
 
-	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domainResult))
 }
