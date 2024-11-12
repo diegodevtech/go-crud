@@ -7,6 +7,9 @@ import (
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
 	"github.com/diegodevtech/go-crud/src/model"
+	"github.com/diegodevtech/go-crud/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.uber.org/zap"
 )
 
 const (
@@ -15,22 +18,19 @@ const (
 
 func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr) {
 
-	logger.Info("Init createUser repository")
+	logger.Info("Initializing CreateUser Repository Method", zap.String("journey", "createUser"))
 
 	collection_name := os.Getenv(MONGODB_USER_COLLECTION)
 	collection := ur.databaseConnection.Collection(collection_name)
 
-	value, err := userDomain.GetJSONValue(); 
-	if err != nil {
-		return nil, rest_err.NewInternalServerError(err.Error())
-	}
+	value := converter.ConvertDomainToEntity(userDomain)
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
-	userDomain.SetID(result.InsertedID.(string))
+	value.ID = result.InsertedID.(bson.ObjectID)
 
-	return userDomain, nil
+	return converter.ConvertEntityToDomain(*value), nil
 }
