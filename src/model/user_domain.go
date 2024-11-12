@@ -4,6 +4,9 @@ import (
 	// "crypto/md5"
 	// "encoding/hex"
 
+	"encoding/json"
+	"fmt"
+
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,36 +17,55 @@ type UserDomainInterface interface {
 	GetName() string
 	GetAge() int8
 
+	SetID(string)
 	EncryptPassword()
+	GetJSONValue() (string, error)
 }
 
 func NewUserDomain(
-	email, password, name string, 
+	email, password, name string,
 	age int8,
 ) UserDomainInterface {
 	return &userDomain{
-		email, password, name, age,
+		Email:email, 
+		Password: password, 
+		Name: name, 
+		Age: age,
 	}
 }
 
 type userDomain struct {
-	email    string
-	password string
-	name     string
-	age      int8
+	ID       string
+	Email    string
+	Password string
+	Name     string
+	Age      int8
+}
+
+func (ud *userDomain) SetID(id string) {
+	ud.ID = id
+}
+
+func (ud *userDomain) GetJSONValue() (string, error) {
+	b, err := json.Marshal(ud)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	return string(b), nil
 }
 
 func (ud *userDomain) GetEmail() string {
-	return ud.email
+	return ud.Email
 }
 func (ud *userDomain) GetPassword() string {
-	return ud.password
+	return ud.Password
 }
 func (ud *userDomain) GetName() string {
-	return ud.name
+	return ud.Name
 }
 func (ud *userDomain) GetAge() int8 {
-	return ud.age
+	return ud.Age
 }
 
 func (ud *userDomain) EncryptPassword() {
@@ -52,9 +74,9 @@ func (ud *userDomain) EncryptPassword() {
 	// hash.Write([]byte(ud.Password))
 	// ud.Password = hex.EncodeToString(hash.Sum(nil))
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(ud.password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(ud.Password), bcrypt.DefaultCost)
 	if err != nil {
 		logger.Error("Fail attempting to encrypt password", err)
 	}
-	ud.password = string(hashedPassword)
+	ud.Password = string(hashedPassword)
 }
