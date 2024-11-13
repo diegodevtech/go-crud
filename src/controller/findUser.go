@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"net/mail"
 
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
@@ -36,4 +37,28 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context){
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(userDomain))
 
 }
-func (uc *userControllerInterface) FindUserByEmail(c *gin.Context){}
+func (uc *userControllerInterface) FindUserByEmail(c *gin.Context){
+	logger.Info("Initializing FindUserByEmail Controller Method", zap.String("journey", "findUserByEmail"))
+
+	userEmail := c.Param("userEmail")
+
+	if _, err := mail.ParseAddress(userEmail); err != nil {
+		logger.Error("Error trying to validate userEmail", err, zap.String("journey","findUserByEmail"))
+
+		errorMessage := rest_err.NewBadRequestError("UserEmail is not a valid email")
+
+		c.JSON(errorMessage.Code, errorMessage)
+		return
+	}
+
+	userDomain, err := uc.service.FindUserByEmailService(userEmail)
+
+	if err != nil {
+		logger.Error("Error trying to call findUserByEmail service", err, zap.String("journey","findUserByID"))
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("FindUserByEmail controller executed successfully", zap.String("journey", "findUserByEmail"))
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(userDomain))
+}
