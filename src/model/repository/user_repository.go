@@ -6,6 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
+const (
+	MONGODB_USER_COLLECTION = "MONGODB_USER_COLLECTION"
+)
+
 func NewUserRepository(database *mongo.Database) UserRepository {
 	return &userRepository{
 		database,
