@@ -23,7 +23,7 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
-		logger.Error("Eror trying to create user", err, zap.String("journey","createUser"))
+		logger.Error("Error trying to create user", err, zap.String("journey","createUser"))
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 

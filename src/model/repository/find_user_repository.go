@@ -52,12 +52,13 @@ func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *r
 
 	userEntity := &entity.UserEntity{}
 
-	filter := bson.D{{Key: "_id", Value: id}}
+	objectId, _ := bson.ObjectIDFromHex(id)
+	filter := bson.D{{Key: "_id", Value: objectId}}
 	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			errorMessage := fmt.Sprintf("User not found with this id :%s", id)
+			errorMessage := fmt.Sprintf("User not found with this id: %s", id)
 			logger.Error(errorMessage, err, zap.String("journey", "findUserByID"))
 			return nil, rest_err.NewNotFoundError(errorMessage)
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
 	"github.com/diegodevtech/go-crud/src/view"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
@@ -17,7 +17,7 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context){
 	
 	userId := c.Param("userId")
 
-	if _, err := uuid.Parse(userId); err != nil {
+	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
 		logger.Error("Error trying to validate userId", err, zap.String("journey","findUserByID"))
 		errorMessage := rest_err.NewBadRequestError("User ID is not a valid ID")
 		c.JSON(errorMessage.Code, errorMessage)
