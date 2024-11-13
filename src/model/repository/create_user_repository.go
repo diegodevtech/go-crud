@@ -12,10 +12,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	MONGODB_USER_COLLECTION = "MONGODB_USER_COLLECTION"
-)
-
 func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr) {
 
 	logger.Info("Initializing CreateUser Repository Method", zap.String("journey", "createUser"))
@@ -27,7 +23,7 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
-		logger.Error("Eror trying to create user", err, zap.String("journey","createUser"))
+		logger.Error("Error trying to create user", err, zap.String("journey","createUser"))
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
