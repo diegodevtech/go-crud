@@ -11,6 +11,15 @@ type UserDomainInterface interface {
 	EncryptPassword()
 }
 
+func NewLoginDomain(
+	email, password string,
+) UserDomainInterface {
+	return &userDomain{
+		email:email, 
+		password: password, 
+	}
+}
+
 func NewUserDomain(
 	email, password, name string,
 	age int8,

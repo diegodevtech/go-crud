@@ -1,6 +1,8 @@
 package service
 
 import (
+	// "fmt"
+
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
 	"github.com/diegodevtech/go-crud/src/model"
@@ -10,6 +12,11 @@ import (
 func (ud *userDomainService) CreateUserService(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr) {
 	logger.Info("Initializing CreateUser Model Method", zap.String("journey", "createUser"))
 
+	user, _ := ud.FindUserByEmailService(userDomain.GetEmail())
+	if user != nil {
+		return nil, rest_err.NewBadRequestError("Email is already registered in another account.")
+		// fmt.Println(user)
+	}
 	userDomain.EncryptPassword()
 	
 	userDomainRepository, err := ud.userRepository.CreateUser(userDomain)
