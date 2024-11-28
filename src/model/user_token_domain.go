@@ -59,7 +59,7 @@ func VerifyToken(tokenValue string) (UserDomainInterface, *rest_err.RestErr){
 		id: claims["id"].(string),
 		email: claims["email"].(string),
 		name: claims["name"].(string),
-		age: claims["age"].(int8),
+		age: int8(claims["age"].(float64)),
 	}, nil
 }
 

@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"net/mail"
 
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
+	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/diegodevtech/go-crud/src/view"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,6 +16,14 @@ import (
 
 func (uc *userControllerInterface) FindUserByID(c *gin.Context){
 	logger.Info("Initializing FindUserByID Controller Method", zap.String("journey", "findUserByID"))
+
+	user, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info(fmt.Sprintf("User authenticated: %#v", user))
 	
 	userId := c.Param("userId")
 
@@ -39,6 +49,14 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context){
 }
 func (uc *userControllerInterface) FindUserByEmail(c *gin.Context){
 	logger.Info("Initializing FindUserByEmail Controller Method", zap.String("journey", "findUserByEmail"))
+
+	user, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info(fmt.Sprintf("User authenticated: %#v", user))
 
 	userEmail := c.Param("userEmail")
 
