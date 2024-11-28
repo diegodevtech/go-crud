@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
@@ -34,4 +35,37 @@ func (ud *userDomain) GenerateToken() (string, *rest_err.RestErr) {
 	}
 
 	return tokenString, nil
+}
+
+func VerifyToken(tokenValue string) (UserDomainInterface, *rest_err.RestErr){
+	secret := os.Getenv(JWT_SECRET_KEY)
+
+	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue), func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); ok {
+			return []byte(secret), nil
+		}
+		return nil, rest_err.NewBadRequestError("Invalid Token")
+	})
+	if err != nil {
+		return nil, rest_err.NewUnauthorizedError("Invalid Token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, rest_err.NewUnauthorizedError("Invalid Token")
+	}
+
+	return &userDomain{
+		id: claims["id"].(string),
+		email: claims["email"].(string),
+		name: claims["name"].(string),
+		age: claims["age"].(int8),
+	}, nil
+}
+
+func RemoveBearerPrefix(token string) string {
+	if strings.HasPrefix(token, "Bearer "){
+		token = strings.TrimPrefix("Bearer ", token)
+	}
+	return token
 }
