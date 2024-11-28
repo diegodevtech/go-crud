@@ -15,7 +15,7 @@ func (ud *userDomainService) LoginService(userDomain model.UserDomainInterface) 
 	fmt.Println("=================")
 
 	fmt.Println(userDomain.GetEmail(), userDomain.GetPassword())
-	userDomain.EncryptPassword()
+	// userDomain.EncryptPassword()
 	fmt.Println(userDomain.GetPassword())
 	
 	fmt.Println("=================")
