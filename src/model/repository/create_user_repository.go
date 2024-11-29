@@ -8,7 +8,9 @@ import (
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
 	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/diegodevtech/go-crud/src/model/repository/entity/converter"
-	"go.mongodb.org/mongo-driver/v2/bson"
+
+	// "go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
@@ -27,7 +29,7 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
-	value.ID = result.InsertedID.(bson.ObjectID)
+	value.ID = result.InsertedID.(primitive.ObjectID)
 
 	logger.Info("CreateUser repository executed successfully",
 		zap.String("userId", value.ID.Hex()),

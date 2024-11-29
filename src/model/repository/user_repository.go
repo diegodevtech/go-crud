@@ -3,7 +3,8 @@ package repository
 import (
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
 	"github.com/diegodevtech/go-crud/src/model"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
+	// "go.mongodb.org/mongo-driver/v2/mongo" //	tire o /v2 pcausa do teste
 )
 
 const (
