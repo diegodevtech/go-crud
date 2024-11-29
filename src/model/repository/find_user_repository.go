@@ -10,8 +10,9 @@ import (
 	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/diegodevtech/go-crud/src/model/repository/entity"
 	"github.com/diegodevtech/go-crud/src/model/repository/entity/converter"
-	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -92,7 +93,7 @@ func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *r
 
 	userEntity := &entity.UserEntity{}
 
-	objectId, _ := bson.ObjectIDFromHex(id)
+	objectId, _ := primitive.ObjectIDFromHex(id)
 	filter := bson.D{{Key: "_id", Value: objectId}}
 	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
 

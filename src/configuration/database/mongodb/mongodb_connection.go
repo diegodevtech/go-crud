@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var (
@@ -16,7 +16,7 @@ func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 	mongodb_uri := os.Getenv(MONGODB_URL)
 	mongodb_database := os.Getenv(MONGODB_USER_DB)
 
-	client, err := mongo.Connect(options.Client().ApplyURI(mongodb_uri))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongodb_uri))
 	if err != nil {
 		return nil, err
 	}
