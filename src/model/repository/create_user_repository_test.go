@@ -15,7 +15,11 @@ func TestUserRepository_CreateUser(t *testing.T){
 	databaseName := "user_database_test"
 	collectionName := "user_collection_test"
 
-	os.Setenv("MONGODB_USER_DB", collectionName)
+	err := os.Setenv("MONGODB_USER_DB", collectionName)
+	if err != nil {
+		t.FailNow()
+		return
+	}
 	defer os.Clearenv()
 
 	mTestDb := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
@@ -58,5 +62,5 @@ func TestUserRepository_CreateUser(t *testing.T){
 		assert.NotNil(t, err)
 		assert.Nil(t, userDomain)
 	})
-	
+
 }
