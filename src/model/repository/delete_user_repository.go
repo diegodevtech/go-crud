@@ -6,7 +6,8 @@ import (
 
 	"github.com/diegodevtech/go-crud/src/configuration/logger"
 	"github.com/diegodevtech/go-crud/src/configuration/rest_err"
-	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
@@ -16,7 +17,7 @@ func (ur *userRepository) DeleteUser(userId string) *rest_err.RestErr {
 	collection_name := os.Getenv(MONGODB_USER_COLLECTION)
 	collection := ur.databaseConnection.Collection(collection_name)
 
-	userIdHex, _ := bson.ObjectIDFromHex(userId)
+	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 	
 	filter := bson.D{{Key: "_id", Value: userIdHex}}
 
