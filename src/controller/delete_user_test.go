@@ -21,7 +21,7 @@ func TestUserController_DeleteUser(t *testing.T) {
 	service := mocks.NewMockUserDomainService(ctrl)
 	controller := NewUserControllerInterface(service)
 
-	t.Run("invalid_iuserId_returns_error", func(t *testing.T) {
+	t.Run("invalid_userId_returns_error", func(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		context := GetTestGinContext(recorder)
 
