@@ -73,6 +73,7 @@ func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (mo
 		return nil, rest_err.NewInternalServerError(errorMessage)
 	}
 
+	fmt.Println(userEntity.Password, password)
 	err = bcrypt.CompareHashAndPassword([]byte(userEntity.Password), []byte(password))
 
 	if err != nil {
