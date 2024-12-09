@@ -24,8 +24,13 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	err := os.Setenv("MONGODB_USER_DB", "testUser")
+	err := os.Setenv("MONGODB_USER_DB", "test_db")
 	if err != nil {
+		return
+	}
+
+	err2 := os.Setenv("MONGODB_USER_COLLECTION","test_collection")
+	if err2 != nil {
 		return
 	}
 

@@ -9,7 +9,7 @@ import (
 
 const (
 	MONGODB_USER_COLLECTION = "MONGODB_USER_COLLECTION"
-	MONGODB_USER_DB = "crudInit"
+	MONGODB_USER_DB = "MONGODB_USER_DB"
 )
 
 func NewUserRepository(database *mongo.Database) UserRepository {

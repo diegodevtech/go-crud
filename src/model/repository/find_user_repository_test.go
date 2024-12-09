@@ -18,7 +18,7 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 	databaseName := "user_database_test"
 	collectionName := "user_collection_test"
 
-	err := os.Setenv("MONGODB_USER_DB", collectionName)
+	err := os.Setenv("MONGODB_USER_DB", databaseName)
 	if err != nil {
 		t.FailNow()
 		return
