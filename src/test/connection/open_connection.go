@@ -1,17 +1,16 @@
-package main
+package connection
 
 import (
 	"context"
 	"fmt"
-	"log"
-
-	"github.com/ory/dockertest/v3"
+	"github.com/ory/dockertest"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"os"
 )
 
-func OpenConnection() (close func()) {
-
+func OpenConnection() (database *mongo.Database, close func()) {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		log.Fatalf("Could not construct pool: %s", err)
@@ -22,14 +21,13 @@ func OpenConnection() (close func()) {
 		Repository: "mongo",
 		Tag:        "latest",
 	})
-
 	if err != nil {
 		log.Fatalf("Could not create mongo container: %s", err)
 		return
 	}
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(fmt.Sprintf("mongodb://127.0.0.1:%s", resource.GetPort("27017/tcp"))))
-
+	client, err := mongo.NewClient(options.Client().ApplyURI(
+		fmt.Sprintf("mongodb://127.0.0.1:%s", resource.GetPort("27017/tcp"))))
 	if err != nil {
 		log.Println("Error trying to open connection")
 		return
@@ -41,15 +39,14 @@ func OpenConnection() (close func()) {
 		return
 	}
 
-	// variavel global nao instanciada
-	// Collection = client.Database(DatabaseName).Collection(CollectionName)
-
+	database = client.Database(os.Getenv("MONGODB_USER_DB"))
 	close = func() {
-		resource.Close()
+		err := resource.Close()
 		if err != nil {
 			log.Println("Error trying to open connection")
 			return
 		}
 	}
+
 	return
 }
