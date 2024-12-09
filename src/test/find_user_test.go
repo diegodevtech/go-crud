@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,9 @@ import (
 	"github.com/diegodevtech/go-crud/src/test/connection"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -68,6 +71,82 @@ func TestFindUserByEmail(t *testing.T) {
 		assert.EqualValues(t, http.StatusNotFound, recorder.Code)
 	})
 
+	t.Run("user_found_with_specified_email", func(t *testing.T) {
+		recorder := httptest.NewRecorder()
+		ctx := GetTestGinContext(recorder)
+		id := primitive.NewObjectID().Hex()
+
+		_, err := Database.Collection("test_collection").InsertOne(context.Background(), bson.M{
+			"_id": id,
+			"name": t.Name(),
+			"email": "test@test.com", 
+		})
+		if err != nil {
+			t.Fatal(err)
+			return
+		}
+
+		param := []gin.Param{
+			{
+				Key:   "userEmail",
+				Value: "test@test.com",
+			},
+		}
+
+		MakeRequest(ctx, param, url.Values{}, "GET", nil)
+		UserController.FindUserByEmail(ctx)
+
+		assert.EqualValues(t, http.StatusOK, recorder.Code)
+	})
+}
+
+func TestFindUserByID(t *testing.T) {
+
+	t.Run("user_not_found_with_this_id", func(t *testing.T) {
+		recorder := httptest.NewRecorder()
+		ctx := GetTestGinContext(recorder)
+		id := primitive.NewObjectID().Hex()
+
+		param := []gin.Param{
+			{
+				Key:   "userId",
+				Value: id,
+			},
+		}
+
+		MakeRequest(ctx, param, url.Values{}, "GET", nil)
+		UserController.FindUserByID(ctx)
+
+		assert.EqualValues(t, http.StatusNotFound, recorder.Code)
+	})
+
+	t.Run("user_found_with_specified_id", func(t *testing.T) {
+		recorder := httptest.NewRecorder()
+		ctx := GetTestGinContext(recorder)
+		id := primitive.NewObjectID()
+
+		_, err := Database.Collection("test_collection").InsertOne(context.Background(), bson.M{
+			"_id": id,
+			"name": t.Name(),
+			"email": "test@test.com", 
+		})
+		if err != nil {
+			t.Fatal(err)
+			return
+		}
+
+		param := []gin.Param{
+			{
+				Key:   "userId",
+				Value: id.Hex(),
+			},
+		}
+
+		MakeRequest(ctx, param, url.Values{}, "GET", nil)
+		UserController.FindUserByID(ctx)
+
+		assert.EqualValues(t, http.StatusOK, recorder.Code)
+	})
 }
 
 func GetTestGinContext(recorder *httptest.ResponseRecorder) *gin.Context {
