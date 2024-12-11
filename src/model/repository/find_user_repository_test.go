@@ -99,14 +99,14 @@ func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
 
 	mTestDb := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 
-	mTestDb.Run("success", func(mt *mtest.T){
+	mTestDb.Run("success", func(mt *mtest.T) {
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("Teste@@2020"), bcrypt.DefaultCost)
 		userEntity := entity.UserEntity{
-			ID: primitive.NewObjectID(),
-			Email: "teste@teste.com",
+			ID:       primitive.NewObjectID(),
+			Email:    "teste@teste.com",
 			Password: string(hashedPassword),
-			Name: "Teste",
-			Age: 20,
+			Name:     "Teste",
+			Age:      20,
 		}
 		mt.AddMockResponses(mtest.CreateCursorResponse(
 			1,
@@ -146,20 +146,20 @@ func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
 
 	mTestDb.Run("unexpected error in FindOne", func(mt *mtest.T) {
 
-    mt.AddMockResponses(mtest.CreateCommandErrorResponse(mtest.CommandError{
-        Code:    11000,
-        Message: "Simulated database error",
-    }))
+		mt.AddMockResponses(mtest.CreateCommandErrorResponse(mtest.CommandError{
+			Code:    11000,
+			Message: "Simulated database error",
+		}))
 
-    databaseMock := mt.Client.Database(databaseName)
-    repo := NewUserRepository(databaseMock)
+		databaseMock := mt.Client.Database(databaseName)
+		repo := NewUserRepository(databaseMock)
 
-    userDomain, err := repo.FindUserByEmailAndPassword("error@teste.com", "Password123")
+		userDomain, err := repo.FindUserByEmailAndPassword("error@teste.com", "Password123")
 
-    assert.Nil(t, userDomain)
-    assert.NotNil(t, err)
-    assert.Equal(t, "Error trying to find user by email", err.Message)
-})
+		assert.Nil(t, userDomain)
+		assert.NotNil(t, err)
+		assert.Equal(t, "Error trying to find user by email", err.Message)
+	})
 
 	mTestDb.Run("password incorrect", func(mt *mtest.T) {
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("CorrectPassword@@2020"), bcrypt.DefaultCost)

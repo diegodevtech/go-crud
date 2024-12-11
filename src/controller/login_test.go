@@ -133,7 +133,7 @@ func TestUserController_Login(t *testing.T){
 		}
 
 		domain := model.NewLoginDomain(
-			userRequest.Email,
+			"teste@teste.comX",
 			userRequest.Password,
 		)
 
