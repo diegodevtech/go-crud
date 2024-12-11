@@ -65,7 +65,7 @@ func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (mo
 		if err == mongo.ErrNoDocuments {
 			errorMessage := "User not found with this email."
 			logger.Error(errorMessage, err, zap.String("journey", "findUserByEmailAndPassword"))
-			return nil, rest_err.NewNotFoundError(errorMessage)
+			return nil, rest_err.NewUnauthorizedError(errorMessage)
 		}
 
 		errorMessage := "Error trying to find user by email"
@@ -73,7 +73,6 @@ func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (mo
 		return nil, rest_err.NewInternalServerError(errorMessage)
 	}
 
-	fmt.Println(userEntity.Password, password)
 	err = bcrypt.CompareHashAndPassword([]byte(userEntity.Password), []byte(password))
 
 	if err != nil {
