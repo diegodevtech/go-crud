@@ -9,7 +9,6 @@ import (
 	"github.com/diegodevtech/go-crud/src/model"
 	"github.com/diegodevtech/go-crud/src/model/repository/entity/converter"
 
-	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )

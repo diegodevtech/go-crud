@@ -12,8 +12,16 @@ import (
 	"github.com/diegodevtech/go-crud/src/model/service"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	_ "github.com/diegodevtech/go-crud/docs"
 )
 
+// @title Go Crud | Diego Dev Tech
+// @version 1.0
+// @description API for crud operations on users
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @license MIT
 func main(){
 	logger.Info("STARTING APPLICATION")
 	err := godotenv.Load()
@@ -33,7 +41,7 @@ func main(){
 	userController := controller.NewUserControllerInterface(service)
 	
 	router := gin.Default()
-
+	gin.SetMode(gin.ReleaseMode)
 	routes.InitRoutes(&router.RouterGroup, userController)
 
 	err = router.Run(":8080")

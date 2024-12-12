@@ -24,7 +24,7 @@ func (ud *userDomain) GenerateToken() (string, *rest_err.RestErr) {
 		"email": ud.email,
 		"name": ud.name,
 		"age": ud.age,
-		"exp": time.Now().Add(time.Minute * 1).Unix(),
+		"exp": time.Now().Add(time.Hour * 1).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -75,8 +75,5 @@ func VerifyTokenMiddleware(c *gin.Context){
 }
 
 func RemoveBearerPrefix(token string) string {
-	if strings.HasPrefix(token, "Bearer "){
-		token = strings.TrimPrefix("Bearer ", token)
-	}
-	return token
+	return strings.TrimPrefix(token, "Bearer ")
 }
