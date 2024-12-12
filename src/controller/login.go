@@ -50,6 +50,6 @@ func (uc *userControllerInterface) Login(c *gin.Context) {
 	}
 
 	logger.Info("Login controller executed successfully", zap.String("userId", domainResult.GetID()), zap.String("journey","login"))
-	c.Header("Authorization", "Bearer " + token)
+	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domainResult))
 }
