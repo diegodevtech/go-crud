@@ -1,0 +1,25 @@
+services:
+  go-crud:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - MONGODB_USER_DB=users
+      - JWT_SECRET_KEY=blablablablablablabla
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - go_crud_network
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - go_crud_network
+
+networks:
+  go_crud_network:
