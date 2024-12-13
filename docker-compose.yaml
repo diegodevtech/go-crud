@@ -4,15 +4,19 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      - MONGODB_USER_DB=crudInit
       - MONGODB_URL=mongodb://mongodb:27017
-      - MONGODB_USER_DB=users
+      - MONGODB_USER_COLLECTION=test_collection
       - JWT_SECRET_KEY=blablablablablablabla
     ports:
       - "8080:8080"
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     networks:
       - go_crud_network
+    volumes:
+    - ./.env:/app/.env
 
   mongodb:
     image: mongo
@@ -20,6 +24,12 @@ services:
       - "27017:27017"
     networks:
       - go_crud_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
 
 networks:
   go_crud_network:
