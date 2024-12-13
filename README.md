@@ -30,8 +30,15 @@ Follow the steps below to install the project in your development environment:
    ```
    cd go-crud
    ```
+3. **Make sure you have a .env file containing the following variables:**
+```
+MONGODB_URL="mongodb://localhost:27017"
+MONGODB_USER_DB=<"mongodb_name">
+MONGODB_USER_COLLECTION=<"mongodb_collection_name">
+JWT_SECRET_KEY=<"a random value">
+```
 
-3. **Build the application using Docker Compose:**
+4. **Build the application using Docker Compose:**
 
    ```
    docker compose up
