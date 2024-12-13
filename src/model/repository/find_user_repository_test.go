@@ -189,7 +189,7 @@ func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
 		// Assertions
 		assert.Nil(t, userDomain)
 		assert.NotNil(t, err)
-		assert.Equal(t, "Incorrect password", err.Message)
+		assert.Equal(t, "Incorrect credentials", err.Message)
 	})
 }
 

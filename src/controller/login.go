@@ -12,6 +12,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// LoginUser allows a user to log in and obtain an authentication token.
+// @Summary User Login
+// @Description Allows a user to log in and receive an authentication token.
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param userLogin body request.LoginRequest true "User login credentials"
+// @Header 200 {string} Authorization "Authentication token"
+// @Success 200 {object} response.UserResponse "Login successful, authentication token provided"
+// @Failure 401 {object} rest_err.RestErr "Error: Incorrect credentials"
+// @Router /login [post]
 func (uc *userControllerInterface) Login(c *gin.Context) {
 	logger.Info("Initializing Login Controller Method", zap.String("journey", "login"))
 
