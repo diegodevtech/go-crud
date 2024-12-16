@@ -44,17 +44,7 @@ JWT_SECRET_KEY=<"a random value">
    docker compose up
    ```
 
-## Running the Application
-
-After installation, you can run the Go-Crud application with the following command (if you want to run it directly with Golang):
-
-```
-docker run --name go-crud -p 27017:27017 -d mongo
-
-go run main.go
-```
-
-The application will be accessible at `http://localhost:8080`.
+The application will be accessible at `http://localhost:8080`
 
 ## Testing the Application
 
