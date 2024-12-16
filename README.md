@@ -163,7 +163,7 @@ The API offers the following endpoints:
 5. **POST /login**
    - Description: Allow a user to log in and receive an authentication token.
    - Parameters:
-      - `userLogin` (body, required): User login credentials.
+      - `Login` (body, required): User login credentials.
    - Responses:
       - 200: Login successful, authentication token provided
       - 401: Error: Invalid login credentials
